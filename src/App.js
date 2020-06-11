@@ -8,8 +8,9 @@ class App extends Component {
   render() {
     return (
       <div>
+        {/* Comment: the outer main layout that contains everything navigation bar and all  */}
         <Layout>
-          <BurgerBuilder></BurgerBuilder>
+          <BurgerBuilder/>
         </Layout>
       </div>
     );

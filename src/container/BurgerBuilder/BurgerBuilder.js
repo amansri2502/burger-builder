@@ -21,6 +21,7 @@ class BurgerBuilder extends Component {
     },
     totalPrice: 0,
     purchasable: false,
+    purchasing: false,
   };
 
   updatePurchaseState(ingredients) {
@@ -57,6 +58,16 @@ class BurgerBuilder extends Component {
     }
   };
 
+  orderButtonclickedHandler = () => {
+    this.setState({ purchasing: true });
+  };
+  cancelOrderClickedHandler = () => {
+    this.setState({ purchasing: false });
+  };
+  purchaseContinueHandler = () => {
+    alert(" continued walla walla ");
+  };
+
   render() {
     let disabledInfo = {
       ...this.state.ingredient,
@@ -67,8 +78,16 @@ class BurgerBuilder extends Component {
     return (
       // Aux is a hoc
       <Aux>
-        <Model>
-          <OrderSummary ingredients={this.state.ingredient}></OrderSummary>
+        <Model
+          show={this.state.purchasing}
+          clicked={this.cancelOrderClickedHandler}
+        >
+          <OrderSummary
+            cancel={this.cancelOrderClickedHandler}
+            order={this.purchaseContinueHandler}
+            ingredients={this.state.ingredient}
+            price={this.state.totalPrice}
+          ></OrderSummary>
         </Model>
         <Burger ingredients={this.state.ingredient} />
         <BurgerControl
@@ -77,6 +96,7 @@ class BurgerBuilder extends Component {
           disabled={disabledInfo}
           price={this.state.totalPrice}
           purchasable={this.state.purchasable}
+          clicked={this.orderButtonclickedHandler}
         />
       </Aux>
     );

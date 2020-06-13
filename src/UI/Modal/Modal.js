@@ -3,7 +3,6 @@ import classes from "./Modal.module.css";
 import Aux from "../../hoc/Auxilary";
 import Backdrop from "../Backdrop/BackDrop";
 
-
 const Model = (props) => {
   return (
     <Aux>
@@ -17,6 +16,7 @@ const Model = (props) => {
           opacity: props.show ? "1" : "0",
         }}
       >
+        {/* ordersummary passed as children */}
         {props.children}
       </div>
     </Aux>

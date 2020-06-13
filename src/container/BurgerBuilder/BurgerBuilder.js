@@ -78,6 +78,7 @@ class BurgerBuilder extends Component {
     return (
       // Aux is a hoc
       <Aux>
+        {/* model Component */}
         <Model
           show={this.state.purchasing}
           clicked={this.cancelOrderClickedHandler}
@@ -89,6 +90,7 @@ class BurgerBuilder extends Component {
             price={this.state.totalPrice}
           ></OrderSummary>
         </Model>
+        {/* Burger */}
         <Burger ingredients={this.state.ingredient} />
         <BurgerControl
           ingredientAdded={this.addIngredientHandler}

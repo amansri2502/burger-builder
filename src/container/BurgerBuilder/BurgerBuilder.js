@@ -6,6 +6,7 @@ import Model from "../../UI/Modal/Modal";
 import OrderSummary from "../../components/OrderSummary/OrderSummary";
 import axios from "axios";
 import Spinner from "../../UI/Spinner/Spinner";
+import withErrorHandler from "../../hoc/withErrorHandler"
 
 const INGREDIENT_PRICES = {
   cheese: 0.5,
@@ -48,6 +49,7 @@ class BurgerBuilder extends Component {
     this.setState({ totalPrice: newPrice, ingredient: updatedIngredient });
     this.updatePurchaseState(updatedIngredient);
   };
+
   removeIngredientHandler = (type) => {
     let oldCount = this.state.ingredient[type];
 
@@ -68,6 +70,7 @@ class BurgerBuilder extends Component {
   cancelOrderClickedHandler = () => {
     this.setState({ purchasing: false });
   };
+
   purchaseContinueHandler = () => {
     this.setState({loading:true})
     const order = {
@@ -84,8 +87,9 @@ class BurgerBuilder extends Component {
         delivarymethod: "fastest",
       },
     };
+    //Post request 
     axios
-      .post("/orders.json", order)
+      .post("/orders", order)
       .then((response) => this.setState({ loading: false,purchasing:false }))
       .catch((err) => {
         this.setState({ loading: false,purchasing:false });
@@ -136,4 +140,4 @@ class BurgerBuilder extends Component {
     );
   }
 }
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder,axios);

@@ -6,7 +6,7 @@ import Backdrop from "../Backdrop/BackDrop";
 class Model extends Component {
   // as model was present in burger builder which manages state so it was changing even when it was invisible so here by using shouldComponentUpdate we are checking if model is visible then only it should be rebuild
   shouldComponentUpdate(nextProp, nextState) {
-    return nextProp.show !== this.props.show;
+    return nextProp.show !== this.props.show || nextProp.children!==this.props.children;
   }
   render() {
     return (

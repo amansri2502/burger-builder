@@ -5,7 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import axios from 'axios'
 
-axios.defaults.baseURL="https://burger-7ef95.firebaseio.com/";
+axios.defaults.baseURL="https://burger.firebaseio.com/";
 
 ReactDOM.render(
   <React.StrictMode>

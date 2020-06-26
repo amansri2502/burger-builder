@@ -93,7 +93,7 @@ class BurgerBuilder extends Component {
     };
     //Post request
     axios
-      .post("/orders", order)
+      .post("/orders.json", order)
       .then((response) => this.setState({ loading: false, purchasing: false }))
       .catch((err) => {
         this.setState({ loading: false, purchasing: false });
@@ -105,6 +105,7 @@ class BurgerBuilder extends Component {
       ...this.state.ingredient,
     };
     for (let key in disabledInfo) {
+      // check whether the value in the ingredient is less then or equal to 0 this will assign a boolian value
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
 
@@ -139,7 +140,7 @@ class BurgerBuilder extends Component {
       orderSummary = <Spinner />;
     }
     return (
-      // Aux is a hoc
+      // Aux is a higher order component
       <Aux>
         {/* model Component */}
         <Model

@@ -21,7 +21,7 @@ class BurgerBuilder extends Component {
     purchasable: false,
     purchasing: false,
     loading: false,
-    error:false
+    error: false,
   };
 
   componentDidMount() {
@@ -29,7 +29,10 @@ class BurgerBuilder extends Component {
       .get("https://burger-7ef95.firebaseio.com/ingredient.json")
       .then((response) => {
         this.setState({ ingredient: response.data });
-      }).catch(error=>{this.setState({error:error})});
+      })
+      .catch((error) => {
+        this.setState({ error: error });
+      });
   }
 
   updatePurchaseState(ingredients) {
@@ -76,28 +79,24 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    this.setState({ loading: true });
-    const order = {
-      ingredient: this.state.ingredient,
-      price: this.state.totalPrice.toFixed(2),
-      customer: {
-        name: "Aman",
-        address: {
-          steet: "reva",
-          Pincode: "560064",
-          country: "india",
-        },
-        email: "aman.sri@gmail.com",
-        delivarymethod: "fastest",
-      },
-    };
-    //Post request
-    axios
-      .post("/orders.json", order)
-      .then((response) => this.setState({ loading: false, purchasing: false }))
-      .catch((err) => {
-        this.setState({ loading: false, purchasing: false });
-      });
+   
+
+    const queryParams = [];
+    for (let i in this.state.ingredient) {
+      // encodes it in the form that they can be passed in the url
+      queryParams.push(
+        encodeURIComponent(i) +
+          "=" +
+          encodeURIComponent(this.state.ingredient[i])
+      );}
+      queryParams.push('price='+ this.state.totalPrice);
+
+    const queryString=queryParams.join('&');
+    
+    this.props.history.push({
+      pathname: "./Checkout",
+      search: "?"+queryString,
+    });
   };
 
   render() {
@@ -112,7 +111,7 @@ class BurgerBuilder extends Component {
     let orderSummary = null;
 
     // to render spinner till ingredient is loading
-    let burger = this.state.error?<p>Error in loading page </p>:<Spinner />;
+    let burger = this.state.error ? <p>Error in loading page </p> : <Spinner />;
     if (this.state.ingredient) {
       burger = (
         <Aux>
@@ -133,7 +132,7 @@ class BurgerBuilder extends Component {
           order={this.purchaseContinueHandler}
           ingredients={this.state.ingredient}
           price={this.state.totalPrice}
-        ></OrderSummary>
+        />
       );
     }
     if (this.state.loading) {

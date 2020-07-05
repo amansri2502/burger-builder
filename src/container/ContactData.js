@@ -3,16 +3,64 @@ import Button from "../UI/Buttons/Button";
 import classes from "./ContactData.module.css";
 import axios from "axios";
 import Spinner from "../UI/Spinner/Spinner";
-import {withRouter} from 'react-router-dom'
+import { withRouter } from "react-router-dom";
+import Input from "../UI/Input/Input";
 
 class ContactData extends Component {
   state = {
-    name: "",
-    email: "",
-    address: {
-      street: "",
-      postalCode: "",
+    orderForm: {
+      name: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "YOUR NAME",
+        },
+        value: "",
+      },
+      steet: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "STREET",
+        },
+        value: "",
+      },
+      Pincode: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "PINCODE",
+        },
+        value: "",
+      },
+      country: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "COUNTRY",
+        },
+        value: "",
+      },
+      email: {
+        elementType: "input",
+        elementConfig: {
+          type: "email",
+          placeholder: "E-MAIL",
+        },
+        value: "",
+      },
+      delivarymethod: {
+        elementType: "select",
+        elementConfig: {
+          options: [
+            { value: "fastest", displayValue: "Fastest" },
+            { value: "cheapest", displayValue: "Cheapest" },
+          ],
+        },
+        value: "",
+      },
     },
+
     loading: false,
   };
   // after clicking the order button a request is sent and the page reloads so we loose the state to prevent this an event is passed to the handler and then this event is to be diabled over here
@@ -22,16 +70,6 @@ class ContactData extends Component {
     const order = {
       ingredient: this.props.ingredients,
       price: this.props.price,
-      customer: {
-        name: "Aman",
-        address: {
-          steet: "reva",
-          Pincode: "560064",
-          country: "india",
-        },
-        email: "aman.sri@gmail.com",
-        delivarymethod: "fastest",
-      },
     };
     //Post request
     axios
@@ -44,37 +82,32 @@ class ContactData extends Component {
         this.setState({ loading: false });
       });
   };
+
   render() {
+    const formArray = [];
+    for (let key in this.state.orderForm) {
+      formArray.push({
+        id: key,
+        config: this.state.orderForm[key],
+      });
+    }
+
     let form = (
       <form>
-        <input
-          type="text"
-          className={classes.Input}
-          name="name"
-          placeholder="Your Name"
-        />
-        <input
-          type="text"
-          className={classes.Input}
-          name="email"
-          placeholder="Mail"
-        />
-        <input
-          type="text"
-          className={classes.Input}
-          name="street"
-          placeholder="Street"
-        />
-        <input
-          type="text"
-          className={classes.Input}
-          name="postalCode"
-          placeholder="PostalCode"
-        />
+        {formArray.map((forArrayElem) => {
+          return (
+            <Input
+              key={forArrayElem.id}
+              elementType={forArrayElem.config.elementType}
+              elementConfig={forArrayElem.config.elementConfig}
+              value={forArrayElem.config.value}
+            />
+          );
+        })}
       </form>
     );
     if (this.state.loading === "true") {
-      form =( <Spinner />);
+      form = <Spinner />;
     }
     return (
       <div className={classes.ContactData}>
@@ -87,5 +120,5 @@ class ContactData extends Component {
     );
   }
 }
-// using hoc way of passing the routing props becaouse of the way this page is router using render method insted of component 
-export default withRouter (ContactData);
+// using hoc way of passing the routing props becaouse of the way this page is router using render method insted of component
+export default withRouter(ContactData);

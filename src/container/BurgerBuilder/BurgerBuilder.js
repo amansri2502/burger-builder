@@ -26,7 +26,7 @@ class BurgerBuilder extends Component {
 
   componentDidMount() {
     axios
-      .get("https://burger-7ef95.firebaseio.com/ingredient.json")
+      .get("ingredient.json")
       .then((response) => {
         this.setState({ ingredient: response.data });
       })
@@ -34,6 +34,7 @@ class BurgerBuilder extends Component {
         this.setState({ error: error });
       });
   }
+  // reduce function iterates to each of the array elements and then returns the sum and the sum value is initiallised by 0 which is it's second argument 
 
   updatePurchaseState(ingredients) {
     const sum = Object.keys(ingredients)
@@ -105,7 +106,7 @@ class BurgerBuilder extends Component {
     };
     for (let key in disabledInfo) {
       // check whether the value in the ingredient is less then or equal to 0 this will assign a boolian value
-      disabledInfo[key] = disabledInfo[key] <= 0;
+      disabledInfo[key] = disabledInfo[key]<=0;
     }
 
     let orderSummary = null;

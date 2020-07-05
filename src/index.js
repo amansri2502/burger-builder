@@ -8,13 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 
 axios.defaults.baseURL = "https://burger-7ef95.firebaseio.com/";
 
-// const app = (
-//   //
-//   //
-//   //     <App />
-//   //
-//   //
-// );
+
 
 ReactDOM.render(
   

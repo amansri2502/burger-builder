@@ -14,7 +14,7 @@ class App extends Component {
         <div>
           {/* Comment: the outer main layout that contains everything navigation bar and all  */}
           <Layout>
-            {/* switch is used to choose exactly one it is imported from react router dom */}
+            {/* switch is used to choose exactly one it is imported from react router dom  sequence matters here root route should be kept at bottom*/}
             <Switch>
               <Route path="/checkout" component={Checkout} />
               <Route path="/orders" component={Orders} />

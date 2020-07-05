@@ -27,14 +27,12 @@ class Checkout extends Component {
 
     this.setState({ ingredients: ingredient ,totalPrice:price});
   }
-
+  // home route "/" by using goBack()
   checkoutCancelledHandler = () => {
     this.props.history.goBack();
   };
   checkoutContinuedHandler = () => {
-    this.props.history.replace("./checkout/contact-data");
-    console.log(this.props.match.path +"/contact-data");
-    
+    this.props.history.replace("./checkout/contact-data");  
   };
 
   render() {

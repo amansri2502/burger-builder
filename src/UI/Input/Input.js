@@ -3,28 +3,34 @@ import classes from "./Input.module.css";
 
 const Input = (props) => {
   let inputElement = null;
+  const inputClasses=[classes.InputElement];
+  // class select is false only in case of selection dropdown as it do not have validation property
+  if(props.invalid && props.select && props.touched)
+  inputClasses.push(classes.Invalid);
+
   switch (props.elementType) {
     case "input":
       inputElement = (
         <input
-          className={classes.InputElement}
+          className={inputClasses.join(' ')}
           {...props.elementConfig}
           value={props.value}
+          onChange={props.changed}
         ></input>
       );
       break;
     case "textArea":
       inputElement = (
         <textarea
-          className={classes.InputElement}
+          className={inputClasses.join(' ')}
           {...props.elementConfig}
-          value={props.value}
+          value={props.value}onChange={props.changed}
         />
       );
       break;
     case "select":
       inputElement = (
-        <select className={classes.InputElement} value={props.value}>
+        <select className={inputClasses.join(' ')} value={props.value} onChange={props.changed}>
           {props.elementConfig.options.map((option) => {
             return (
               <option key={option.value} value={option.value}>
@@ -38,9 +44,9 @@ const Input = (props) => {
     default:
       inputElement = (
         <input
-          className={classes.InputElement}
+          className={inputClasses.join(' ')}
           {...props.elementConfig}
-          value={props.value}
+          value={props.value} onChange={props.changed}
         />
       );
   }

@@ -16,6 +16,11 @@ class ContactData extends Component {
           placeholder: "YOUR NAME",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched:false
       },
       steet: {
         elementType: "input",
@@ -24,7 +29,13 @@ class ContactData extends Component {
           placeholder: "STREET",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched:false
       },
+
       Pincode: {
         elementType: "input",
         elementConfig: {
@@ -32,6 +43,12 @@ class ContactData extends Component {
           placeholder: "PINCODE",
         },
         value: "",
+        validation: {
+          required: true,
+          lengthi: 6,
+        },
+        valid: false,
+        touched:false
       },
       country: {
         elementType: "input",
@@ -40,6 +57,11 @@ class ContactData extends Component {
           placeholder: "COUNTRY",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched:false
       },
       email: {
         elementType: "input",
@@ -48,6 +70,11 @@ class ContactData extends Component {
           placeholder: "E-MAIL",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched:false
       },
       delivarymethod: {
         elementType: "select",
@@ -57,19 +84,34 @@ class ContactData extends Component {
             { value: "cheapest", displayValue: "Cheapest" },
           ],
         },
-        value: "",
+        validation:{},
+        value: "fastest",
+        valid:true
       },
     },
-
+    isFormValid:false,
     loading: false,
+  };
+
+  checkValidity = (value, rules) => {
+    let isValid = true;
+    if (rules.required) isValid = value.trim() !== "" && isValid;
+
+    if (rules.lengthi) isValid = value.length === rules.lengthi && isValid;
+    return isValid;
   };
   // after clicking the order button a request is sent and the page reloads so we loose the state to prevent this an event is passed to the handler and then this event is to be diabled over here
   orderHandler = (event) => {
     event.preventDefault();
     this.setState({ loading: true });
+    const formData = {};
+    for (let formElementName in this.state.orderForm) {
+      formData[formElementName] = this.state.orderForm[formElementName].value;
+    }
     const order = {
       ingredient: this.props.ingredients,
       price: this.props.price,
+      orderForm: formData,
     };
     //Post request
     axios
@@ -82,6 +124,25 @@ class ContactData extends Component {
         this.setState({ loading: false });
       });
   };
+  // to deepclone we use spread operator twice
+  inputChangedHandler = (event, inputIdenfier) => {
+    const updatedOrderForm = { ...this.state.orderForm };
+    const updatedInputElem = { ...updatedOrderForm[inputIdenfier] };
+    updatedInputElem.value = event.target.value;
+    updatedInputElem.valid = this.checkValidity(
+      updatedInputElem.value,
+      updatedInputElem.validation
+    
+    );
+    updatedInputElem.touched=true;
+    updatedOrderForm[inputIdenfier] = updatedInputElem;
+      let formState=true;
+      for(let key in updatedOrderForm ){
+        formState=updatedOrderForm[key].valid && formState;
+
+      }
+    this.setState({ orderForm: updatedOrderForm ,isFormValid:formState});
+  };
 
   render() {
     const formArray = [];
@@ -93,7 +154,7 @@ class ContactData extends Component {
     }
 
     let form = (
-      <form>
+      <form onSubmit={this.orderHandler}>
         {formArray.map((forArrayElem) => {
           return (
             <Input
@@ -101,9 +162,17 @@ class ContactData extends Component {
               elementType={forArrayElem.config.elementType}
               elementConfig={forArrayElem.config.elementConfig}
               value={forArrayElem.config.value}
+              changed={(event) =>
+                this.inputChangedHandler(event, forArrayElem.id)
+    
+              }
+              select={forArrayElem.config.validation}
+              invalid={!forArrayElem.config.valid}
+              touched={forArrayElem.config.touched}
             />
           );
         })}
+        <Button btnType="Success" disabled={!this.state.isFormValid}>ORDER</Button>
       </form>
     );
     if (this.state.loading === "true") {
@@ -113,9 +182,6 @@ class ContactData extends Component {
       <div className={classes.ContactData}>
         <h4> Enter your Contact Details</h4>
         {form}
-        <Button btnType="Success" clicked={this.orderHandler}>
-          ORDER
-        </Button>
       </div>
     );
   }

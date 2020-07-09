@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Component } from "react";
-import Layout from "./components/layout/Layout";
+import Layout from "./container/layout/Layout";
 import BurgerBuilder from "./container/BurgerBuilder/BurgerBuilder";
 import Checkout from "./container/Checkout/Checkout";
 import Orders from "./container/Orders"

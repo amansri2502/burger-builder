@@ -5,6 +5,7 @@ import axios from "axios";
 import Spinner from "../UI/Spinner/Spinner";
 import { withRouter } from "react-router-dom";
 import Input from "../UI/Input/Input";
+import {connect} from 'react-redux'
 
 class ContactData extends Component {
   state = {
@@ -109,7 +110,7 @@ class ContactData extends Component {
       formData[formElementName] = this.state.orderForm[formElementName].value;
     }
     const order = {
-      ingredient: this.props.ingredients,
+      ingredient: this.props.ingr,
       price: this.props.price,
       orderForm: formData,
     };
@@ -186,5 +187,11 @@ class ContactData extends Component {
     );
   }
 }
+const mapStateToProps=(state)=>{
+  return {
+    ingr:state.ingredient,
+    price:state.totalPrice
+  }
+}
 // using hoc way of passing the routing props becaouse of the way this page is router using render method insted of component
-export default withRouter(ContactData);
+export default connect(mapStateToProps)(withRouter(ContactData));

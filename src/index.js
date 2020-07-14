@@ -6,11 +6,21 @@ import * as serviceWorker from "./serviceWorker";
 import axios from "axios";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import reducer from "./redux-store/reducer"
-import{createStore}from 'redux';
+import thunk from 'redux-thunk';
+import burgerBuilderReducer from "./redux-store/burgerBuilderReducer"
+import{createStore,applyMiddleware, compose,combineReducers}from 'redux';
+import orderReducer from './redux-store/orderReducer'
 
-axios.defaults.baseURL = "https://burger-7ef95.firebaseio.com/";
-const store=createStore(reducer);
+//combining reducers
+const rootReducer=combineReducers({
+  burgerBuilder:burgerBuilderReducer,
+  orders:orderReducer
+})
+
+axios.defaults.baseURL = "https://burger-7ef9.firebaseio.com/";
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store=createStore(rootReducer, composeEnhancers(applyMiddleware(thunk))
+);
 
 ReactDOM.render(
   //Provider should wrap everything

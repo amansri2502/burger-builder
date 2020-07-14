@@ -4,11 +4,12 @@ import Burger from "../../components/Burger/Burger";
 import BurgerControl from "../../components/Burger/BurgerControl/BurgerControl";
 import Model from "../../UI/Modal/Modal";
 import OrderSummary from "../../components/OrderSummary/OrderSummary";
-import axios from "axios";
+import axios from'axios'
 import Spinner from "../../UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler";
 import {connect} from "react-redux"
-import * as actionType from "../../redux-store/actions";
+import  * as burgerBuilderAction from './../../redux-store/burgerBuilderAction';
+import * as actions from './../../redux-store/orderAction'
 
 
 class BurgerBuilder extends Component {
@@ -17,19 +18,11 @@ class BurgerBuilder extends Component {
   
   
     purchasing: false,
-    loading: false,
-    error: false,
+    
   };
 
-  componentDidMount() {
-    // axios
-    //   .get("ingredient.json")
-    //   .then((response) => {
-    //     this.setState({ ingredient: response.data });
-    //   })
-    //   .catch((error) => {
-    //     this.setState({ error: error });
-    //   });
+  componentDidMount(){
+    this.props.onInitAction();
   }
   // reduce function iterates to each of the array elements and then returns the sum and the sum value is initiallised by 0 which is it's second argument
 
@@ -70,6 +63,7 @@ class BurgerBuilder extends Component {
   // };
 
   orderButtonclickedHandler = () => {
+    
     this.setState({ purchasing: true });
   };
   cancelOrderClickedHandler = () => {
@@ -89,6 +83,7 @@ class BurgerBuilder extends Component {
     // queryParams.push("price=" + this.state.totalPrice);
 
     // const queryString = queryParams.join("&");
+    this.props.onInitPurchase()
 
     this.props.history.push("./checkout");
     // this.props.history.push({
@@ -109,7 +104,7 @@ class BurgerBuilder extends Component {
     let orderSummary = null;
 
     // to render spinner till ingredient is loading
-    let burger = this.state.error ? <p>Error in loading page </p> : <Spinner />;
+    let burger = this.props.error ? <p>Error in loading page </p> : <Spinner />;
     if (this.props.ingr) {
       burger = (
         <Aux>
@@ -133,9 +128,9 @@ class BurgerBuilder extends Component {
         />
       );
     }
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
+    // if (this.state.loading) {
+    //   orderSummary = <Spinner />;
+    // }
     return (
       // Aux is a higher order component
       <Aux>
@@ -154,18 +149,23 @@ class BurgerBuilder extends Component {
 // this will get a state automatically and then that state will be matched with the props
 const mapStateToProps=(state)=>{
   return {
-    ingr:state.ingredient,
-    price:state.totalPrice
+    ingr:state.burgerBuilder.ingredient,
+    price:state.burgerBuilder.totalPrice,
+    error:state.burgerBuilder.error
+
   }
 }
 // here the component create a action of dispatch the onIngredientAdd acts as a method that need to be called to add ingredient the type in the dispatch determines the type of action 
 const mapStateToDispatch=(dispatch)=>{
   return{
-    onIngredientAdd:(ingName)=>dispatch({type:actionType.ADD_INGREDIENT,ingredientName:ingName}),
-    onIngredientRemove:(ingName)=>dispatch({type:actionType.REMOVE_INGREDIENT,ingredientName:ingName}),
+    // now it uses action creaters
+    onIngredientAdd:(ingName)=>dispatch(burgerBuilderAction.addIngredient(ingName)),
+    onIngredientRemove:(ingName)=>dispatch(burgerBuilderAction.removeIngredient(ingName)),
+    onInitAction:()=>dispatch(burgerBuilderAction.initIngredients()),
+    onInitPurchase:() => dispatch(actions.purchaseInit()),
 
 
   }
 
 }
-export default connect(mapStateToProps,mapStateToDispatch)(withErrorHandler(BurgerBuilder, axios));
+export default connect(mapStateToProps,mapStateToDispatch)(withErrorHandler(BurgerBuilder,axios));

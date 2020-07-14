@@ -22,7 +22,7 @@ const withErrorHandler = (WrapperComponent, axios) => {
     
     }
     // as this hoc is used by all the components whereever needed so to prevent memory leak we un mount the interceptor when it's need get's over
-    componentDidUnmount(){
+    componentWillUnmount(){
       axios.interceptors.request.eject(this.request);
       axios.interceptors.request.eject(this.response);
 
